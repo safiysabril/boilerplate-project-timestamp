@@ -1,15 +1,20 @@
 const getDate = (req, res) => {
     const dateString = req.params.date;
-
-    // Check if the dateString is a valid Unix timestamp in milliseconds
-    const isUnixTimestamp = /^\d+$/.test(dateString);
     let date;
 
-    if (isUnixTimestamp) {
-        date = new Date(parseInt(dateString));
+    if (!dateString) {
+        // If no date parameter is provided, use the current date and time
+        return date = new Date();
     } else {
-        date = validateDate(dateString);
+        // Check if the dateString is a valid Unix timestamp in milliseconds
+        const isUnixTimestamp = /^\d+$/.test(dateString);
+        if (isUnixTimestamp) {
+            date = new Date(parseInt(dateString));
+        } else {
+            date = validateDate(dateString);
+        }
     }
+
 
     if (date) {
         res.json({
@@ -24,6 +29,6 @@ const getDate = (req, res) => {
 function validateDate(dateString) {
     const date = new Date(dateString);
     return isNaN(date.getTime()) ? null : date;
-}
+};
 
 module.exports = { getDate };
